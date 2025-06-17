@@ -1,11 +1,10 @@
 import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:liquid_glass/base_shader.dart';
 
 class LiquidGlassLensShader extends BaseShader {
   LiquidGlassLensShader()
-      : super(shaderAssetPath: 'shaders/liquid_glass_lens.frag');
+      : super(shaderAssetPath: "shaders/liquid_glass_lens.frag");
 
   @override
   void updateShaderUniforms({
@@ -42,5 +41,17 @@ class LiquidGlassLensShader extends BaseShader {
         debugPrint('Error setting background texture: $e');
       }
     }
+
+    // Set resolution (indices 0-1)
+
+    // Set mouse position (indices 2-3)
+
+    // Set effect size (index 4)
+
+    // Set blur intensity (index 5)
+
+    // Set dispersion strength (index 6)
+
+    // Set background texture (sampler index 0)
   }
 }

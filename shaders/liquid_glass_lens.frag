@@ -1,3 +1,5 @@
+// This is the code that give us the liquid glass effect, we need to to pass the bg
+
 #include <flutter/runtime_effect.glsl>
 
 // Uniforms from Flutter

@@ -14,7 +14,7 @@ class BackgroundCaptureWidget extends StatefulWidget {
     required this.height,
     required this.shader,
     this.initialPosition,
-    this.captureInterval = const Duration(milliseconds: 8),
+    // this.captureInterval = const Duration(milliseconds: 8),
     this.backgroundKey,
   });
 
@@ -23,7 +23,7 @@ class BackgroundCaptureWidget extends StatefulWidget {
   final double height;
 
   final Offset? initialPosition;
-  final Duration? captureInterval;
+  // final Duration? captureInterval;
   final GlobalKey? backgroundKey;
 
   final BaseShader shader;
@@ -60,32 +60,35 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget>
   }
 
   void _startContinuousCapture() {
-    if (widget.captureInterval != null) {
-      timer = Timer.periodic(widget.captureInterval!, (timer) {
-        if (mounted && !isCapturing) {
-          _captureBackground();
-        }
-      });
-    }
+    // if (widget.captureInterval != null) {
+    //   timer = Timer.periodic(widget.captureInterval!, (timer) {
+    //     if (mounted && !isCapturing) {
+    //       _captureBackground();
+    //     }
+    //   });
+    // }
+    // if (mounted && !isCapturing) {
+    //   _captureBackground();
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget child = SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: _buildWidgetContent(),
-      ),
-    );
+    // final Widget child = SizedBox(
+    //   width: widget.width,
+    //   height: widget.height,
+    //   child: ClipRRect(
+    //     borderRadius: BorderRadius.circular(6),
+    //     child: _buildWidgetContent(),
+    //   ),
+    // );
 
     return Positioned(
       left: position.dx,
       top: position.dy,
       child: Draggable(
         feedback: SizedBox.square(),
-        childWhenDragging: child,
+        // childWhenDragging: child,
         onDragUpdate: (details) {
           setState(() {
             position = position + details.delta;
@@ -100,13 +103,17 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget>
             _captureBackground();
           });
         },
-        child: child,
+        child: SizedBox(
+          height: widget.height,
+          width: widget.width,
+          child: _buildWidgetContent(),
+        ),
       ),
     );
   }
 
   Widget _buildWidgetContent() {
-    if (widget.shader.isLoaded && capturedBackground != null) {
+    if (capturedBackground != null) {
       widget.shader.updateShaderUniforms(
         width: widget.width,
         height: widget.height,
@@ -115,12 +122,35 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget>
       return CustomPaint(
         size: Size(widget.width, widget.height),
         painter: ShaderPainter(widget.shader.shader),
-        child: widget.child,
+        child: Container(
+          decoration: BoxDecoration(border: Border.all()),
+          child: RawImage(
+            width: widget.width,
+            height: widget.height,
+            image: capturedBackground,
+          ),
+        ),
+      );
+      return Container(
+        decoration: BoxDecoration(border: Border.all()),
+        child: CustomPaint(
+          size: Size(widget.width, widget.height),
+          painter: ShaderPainter(widget.shader.shader),
+          child: widget.child,
+        ),
       );
     }
 
     // Fallback to normal child
-    return widget.child;
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.black, width: 2),
+      ),
+      child: ClipOval(child: widget.child),
+    );
   }
 
   Future<void> _captureBackground() async {
