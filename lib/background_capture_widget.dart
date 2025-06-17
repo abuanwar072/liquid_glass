@@ -1,6 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:liquid_glass/liquide_glass_lens_shader.dart';
+import 'package:liquid_glass/shader_painter.dart';
 
 class BackgroundCaptureWidget extends StatefulWidget {
   const BackgroundCaptureWidget(
@@ -25,6 +27,9 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget> {
   bool isCapturing = false;
   ui.Image? capturedBackground;
 
+  late LiquideGlassLensShader liquideGlassLensShader = LiquideGlassLensShader()
+    ..initialize();
+
   @override
   void initState() {
     position = widget.intialPosition ?? Offset(100, 100);
@@ -47,6 +52,17 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget> {
             position = position + details.delta;
           });
         },
+        child: buildWidgetContent(),
+      ),
+    );
+  }
+
+  Widget buildWidgetContent() {
+    if (liquideGlassLensShader.isLoaded && capturedBackground != null) {
+      return CustomPaint(
+        size: Size(widget.width, widget.height),
+        // We need the shader here
+        painter: ShaderPainter(shader: liquideGlassLensShader.shader),
         child: Container(
           height: widget.height,
           width: widget.width,
@@ -54,12 +70,15 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget> {
             border: Border.all(),
           ),
           // not working, because we need to call our capture image function
-          child: RawImage(
-            image: capturedBackground,
-            width: widget.width,
-            height: widget.height,
-          ),
+          child: SizedBox(),
         ),
+      );
+    }
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      decoration: BoxDecoration(
+        border: Border.all(),
       ),
     );
   }
@@ -88,8 +107,11 @@ class _BackgroundCaptureWidgetState extends State<BackgroundCaptureWidget> {
 
       if (!boundaryBox.hasSize) return;
 
+      // Now smoothly it capture what inside the container
+      // Let's apply our shader to it so that we can see the magic
+
       final widgetRectInBoundary = Rect.fromPoints(
-        boundaryBox.globalToLocal(ourBox.globalToLocal(Offset.zero)),
+        boundaryBox.globalToLocal(ourBox.localToGlobal(Offset.zero)),
         boundaryBox.globalToLocal(
           ourBox.localToGlobal(ourBox.size.bottomRight(Offset.zero)),
         ),
