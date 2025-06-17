@@ -1,6 +1,10 @@
+// This is create the main magic for us, it will create the liquid glass effect for us
+// Try to explain the code with command, but you don't have to understand it
+// Because it works, haha
+
 #include <flutter/runtime_effect.glsl>
 
-// Uniforms from Flutter
+// Uniforms are the inputs that we need to pass from Flutter end
 uniform vec2 uResolution;          // Canvas size (width, height)
 uniform vec2 uMouse;               // Defines where the center of the glass effect is
 uniform float uEffectSize;         // Size of the lens effect (recommended 0.1 to 2.0)
