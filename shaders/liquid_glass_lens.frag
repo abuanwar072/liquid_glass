@@ -1,12 +1,12 @@
 #include <flutter/runtime_effect.glsl>
 
 // Uniforms from Flutter
-uniform vec2 uResolution;
-uniform vec2 uMouse;
-uniform float uEffectSize; // Controls the size of the lens effect (0.1 to 2.0 recommended)
-uniform float uBlurIntensity; // Controls the blur strength (0.0 = no blur, 2.0 = heavy blur)
-uniform float uDispersionStrength; // Add chromatic dispersion control
-uniform sampler2D uTexture;
+uniform vec2 uResolution;          // Canvas size (width, height)
+uniform vec2 uMouse;               // Defines where the center of the glass effect is
+uniform float uEffectSize;         // Size of the lens effect (recommended 0.1 to 2.0)
+uniform float uBlurIntensity;      // Strength of blur (0.0 = none, 2.0 = heavy)
+uniform float uDispersionStrength; // Strength of chromatic dispersion
+uniform sampler2D uTexture;        // The background image to manipulate
 
 // Output
 out vec4 fragColor;
